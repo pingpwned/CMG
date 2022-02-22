@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
-
-import { sceneConfig } from './sceneConfig';
+import { sceneConfig } from '../sceneConfig';
+import { store, State } from '../../state';
+import { ActionType } from '../../state/action-types';
 
 class GameScene extends Phaser.Scene {
   private platforms?: Phaser.Physics.Arcade.StaticGroup;
@@ -8,26 +9,57 @@ class GameScene extends Phaser.Scene {
   private stars?: Phaser.Physics.Arcade.Group;
   private score: number = 0;
   private scoreTxt?: Phaser.GameObjects.Text;
+  private address?: Phaser.GameObjects.Text;
   private bombs?: Phaser.GameObjects.Group;
   private gameOver: boolean;
+  private state: State =  store.getState();
 
   constructor() {
     super(sceneConfig);
     this.gameOver = false;
+    store.subscribe(() => {
+      this.state = store.getState();
+
+      //const {gameOver, score} = this.state.connection;
+
+      // if (userAddress && chainId) {
+      //   const trimAddress = `${userAddress.substring(0,4)}..${userAddress.substring(userAddress.length-4,userAddress.length)}`;
+      //   helloButton.setText(`${trimAddress} at ${chainId}`);
+      // } else {
+      //   helloButton.setText(this.TEXT_CONNECT_BUTTON);
+      // }
+    });
   }
 
   public preload() {
+    this.state = store.getState();
     this.load.image("sky", "assets/sky.png");
-    this.load.image("ground", "assets/platform.png");
-    this.load.image("star", "assets/star.png");
+    this.load.image("ground", "assets/platform_mario.png");
+    this.load.image("star", "assets/coin.png");
     this.load.image("bomb", "assets/bomb.png");
-    this.load.spritesheet("dude", "assets/dude.png", {
+    this.load.spritesheet("dude", "assets/mario.png", {
       frameWidth: 32,
       frameHeight: 48
     });
   }
 
   public create() {
+    // this.state = store.getState();
+    // store.subscribe(() => {
+    //   this.state = store.getState();
+    //   console.log(this.state, 'subscribe');
+    //   this.address?.setText(this.state.connection.userAddress || "");
+    //
+    //   //const {gameOver, score} = this.state.connection;
+    //
+    //   // if (userAddress && chainId) {
+    //   //   const trimAddress = `${userAddress.substring(0,4)}..${userAddress.substring(userAddress.length-4,userAddress.length)}`;
+    //   //   helloButton.setText(`${trimAddress} at ${chainId}`);
+    //   // } else {
+    //   //   helloButton.setText(this.TEXT_CONNECT_BUTTON);
+    //   // }
+    // });
+
     this.add.image(400, 300, "sky");
 
     this.platforms = this.physics.add.staticGroup();
@@ -102,6 +134,12 @@ class GameScene extends Phaser.Scene {
       fontSize: "32px",
       color: "#000"
     });
+
+    this.address = this.add.text(15, 15, this.state.connection.userAddress || "lol", { color: '#0f0' });
+
+    console.log(this.state)
+
+
   }
 
   public update() {
@@ -130,8 +168,10 @@ class GameScene extends Phaser.Scene {
     star: any
   ) {
     star.disableBody(true, true);
-    this.score += 10;
-    this.scoreTxt?.setText("Score: " + this.score);
+
+    store.dispatch({type: ActionType.SET_SCORE});
+
+    this.scoreTxt?.setText("Score: " + this.state.connection.score);
 
     if (this.stars?.countActive(true) === 0) {
       this.stars.children.iterate((child: any) => {
@@ -155,7 +195,8 @@ class GameScene extends Phaser.Scene {
     player.setTint(0xff0000);
     player.anims.play("turn");
     this.gameOver = true;
-    console.log(this.scoreTxt, 'from hitBomb')
+    console.log(this.scoreTxt, 'from hitBomb');
+    store.dispatch({type: ActionType.SET_GAME_OVER, payload: this.gameOver});
   }
 }
 

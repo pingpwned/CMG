@@ -30,6 +30,10 @@ const config: HardhatUserConfig = {
       accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
     },
+    local: {
+      url: "http://localhost:8545",
+      chainId: 1337
+    }
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

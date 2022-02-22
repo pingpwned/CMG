@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import GameScene from './GameScene';
+import GameScene from './scenes/GameScene';
+import BootScene from './scenes/BootScene';
 
 export const gameConfig: Phaser.Types.Core.GameConfig = {
   title: "Sample",
@@ -9,7 +10,7 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   scale: {
     width: 800,
     height: 600,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
+    autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
   },
 
   physics: {
@@ -23,5 +24,5 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   parent: "game",
   backgroundColor: "#333333",
 
-  scene: GameScene
+  scene: [BootScene, GameScene]
 };
