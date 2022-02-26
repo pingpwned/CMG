@@ -1,0 +1,101 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "browser": false,
+    "es2021": true,
+    "mocha": true,
+    "node": true
+  },
+  "plugins": ["import", "@typescript-eslint", "react-hooks", "prettier"],
+  "extends": [
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/typescript",
+    "prettier",
+    "plugin:prettier/recommended"
+  ],
+  "ignorePatterns": ["**/node_modules/*"],
+  "rules": {
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "func-style": [
+      "error",
+      "declaration",
+      {
+        "allowArrowFunctions": true
+      }
+    ],
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [".tsx"]
+      }
+    ],
+    "react/jsx-indent": [2, 4],
+    "no-shadow": "off",
+    "import/order": "off",
+    "import/prefer-default-export": "off",
+    "import/no-unresolved": "off",
+    "import/extensions": [
+      "error",
+      "never",
+      {
+        "ignorePackages": true,
+        "pattern": {
+          "json": "always"
+        }
+      }
+    ],
+    "import/no-extraneous-dependencies": "off",
+    "import/no-cycle": "error",
+    "import/no-anonymous-default-export": [
+      "error",
+      {
+        "allowArray": true,
+        "allowLiteral": true,
+        "allowObject": true
+      }
+    ],
+    "react/prop-types": "off",
+    "react/no-multi-comp": "off",
+    "react/no-unescaped-entities": "off",
+    "class-methods-use-this": "off",
+    "lines-between-class-members": "off",
+    "no-param-reassign": "off",
+    "no-plusplus": "off",
+    "no-return-assign": "off",
+    "consistent-return": "off",
+    "no-console": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-undef": "off",
+    "react/jsx-no-undef": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/destructuring-assignment": "off",
+    "prettier/prettier": "off",
+    "func-names": "off",
+    "react/require-default-props": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/triple-slash-reference": "off",
+    "react/jsx-props-no-spreading": "off",
+    "@typescript-eslint/ban-ts-ignore": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "no-useless-constructor": "off",
+    "@typescript-eslint/no-useless-constructor": "error",
+    "no-dupe-class-members": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "require-await": ["error"]
+  }
+}

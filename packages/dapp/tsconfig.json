@@ -1,33 +1,40 @@
 {
-
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
     "noFallthroughCasesInSwitch": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
     "module": "esnext",
     "moduleResolution": "node",
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES6",
+    "noErrorTruncation": true,
+    "useUnknownInCatchVariables": false,
     "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
+    "types": ["jest", "node"],
+    "esModuleInterop": true,
+    "outDir": "build",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "incremental": true,
+    "noEmit": false,
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@web3/*": ["src/web3/*"]
+      "@game/*": ["./src/game/*"],
+      "@web3/*": ["./src/web3/*"],
+      "@components/*": ["./src/components/*"],
+      "@components": ["./src/components/index"],
+      "@state": ["./src/state/index"]
     }
   },
-  "include": [
-    "src",
-    "**/*.ts"
-  ]
+  "exclude": ["node_modules", "build", "dist"]
 }

@@ -1,91 +1,112 @@
 import Phaser from 'phaser';
-
-import { store, State } from '../../state';
-import { ActionType } from '../../state/action-types';
 import { ethers } from 'ethers';
+import { bindActionCreators } from 'redux';
+import { store, State, actionCreators } from '@state';
+import abi, { contractAddress as address } from '@web3/gameContract';
+import { connectWallet } from '@web3/connectWallet';
 
 class BootScene extends Phaser.Scene {
   private state?: State;
-  private TEXT_CONNECT_BUTTON: string = "Click to connect wallet";
+  private actions?: typeof actionCreators;
+  private readyToStart: boolean = false;
+  private helloButton?: Phaser.GameObjects.Text;
+  private startButton?: Phaser.GameObjects.Text;
+  private sky?: Phaser.GameObjects.Image;
+  private TEXT_CONNECT_BUTTON = 'Click to connect wallet';
+  private TEXT_START_BUTON = 'Click to start playing';
+
   constructor() {
     super({
       key: 'BootScene',
     });
   }
 
-  public preload(): void {}
+  preload(): void {
+    this.load.image('sky', 'static/sky.png');
+    this.actions = bindActionCreators(actionCreators, store.dispatch);
+  }
+  create(): void {
+    this.sky = this.add.image(0, 0, 'sky');
+    this.helloButton = this.add.text(0, 0, this.TEXT_CONNECT_BUTTON, { color: '#333' });
+    this.helloButton.setInteractive({ useHandCursor: true });
+    this.helloButton.on('pointerdown', () => {
+      connectWallet();
+    });
 
-  public create(): void {
-    const helloButton = this.add.text(15, 15, this.TEXT_CONNECT_BUTTON, { color: '#0f0' });
-    helloButton.setInteractive({ useHandCursor: true });
-    helloButton.on('pointerdown', () => { this.connectWallet() });
+    this.startButton = this.add.text(0, 0, this.TEXT_START_BUTON, { color: '#333' });
+    this.startButton.visible = false;
+    this.startButton.setInteractive({ useHandCursor: true });
+    this.startButton.on('pointerdown', () => {
+      this.startGame();
+      this.readyToStart = true;
+    });
+    Phaser.Display.Align.In.Center(this.sky, this.add.zone(400, 300, 800, 600));
+    Phaser.Display.Align.In.Center(this.helloButton, this.sky);
+    Phaser.Display.Align.In.Center(this.startButton, this.sky);
 
     store.subscribe(() => {
       this.state = store.getState();
-      const {userAddress, chainId} = this.state.connection;
+      const { userAddress, chainId } = this.state.connection;
 
       if (userAddress && chainId) {
-        const trimAddress = `${userAddress.substring(0,4)}..${userAddress.substring(userAddress.length-4,userAddress.length)}`;
-        helloButton.setText(`${trimAddress} at ${chainId}`);
+        const trimAddress = `${userAddress.substring(0, 4)}..${userAddress.substring(
+          userAddress.length - 4,
+          userAddress.length,
+        )}`;
+        this.helloButton?.setText(`${trimAddress} at ${chainId}`);
       } else {
-        helloButton.setText(this.TEXT_CONNECT_BUTTON);
+        this.helloButton?.setText(this.TEXT_CONNECT_BUTTON);
       }
     });
 
     this.accountChanged();
   }
 
-  public update(): void {
-    if(this.state?.connection?.chainId && this.state?.connection?.userAddress) {
+  update(): void {
+    if (this.state?.connection?.userAddress && !this.readyToStart) {
+      this.startButton!.visible = true;
+      this.helloButton!.visible = false;
+    } else if (this.state?.connection?.userAddress && this.readyToStart) {
+      this.startButton?.setText('Confirm transaction and wait for start');
+      Phaser.Display.Align.In.Center(this.startButton!, this.sky!);
+    }
+    if (
+      this.state?.connection?.chainId &&
+      this.state?.connection?.userAddress &&
+      this.state?.connection?.gameStarted
+    ) {
+      this.startButton!.visible = false;
       this.scene.start('GameScene');
       this.scene.bringToTop('GameScene');
     }
   }
 
-  connectWallet = async () => {
+  private startGame = async () => {
     try {
-      if (!window.ethereum) store.dispatch({type: ActionType.OPEN_PROVIDER_MODAL});
-      const provider: ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum);
-      if (!provider) {
-          console.error('Cannot create provider')
-          return
-      }
-      const _chainId: string = await provider.send('eth_chainId', [])
-      console.log(_chainId);
-      store.dispatch({type: ActionType.SET_NETWORK, payload: _chainId});
-      console.log('Connected to chain:', this.state?.connection?.chainId);
-
-      // const rinkebyChainId = '0x4'
-      //
-      // const devChainId = 1337
-      // const localhostChainId = `0x${Number(devChainId).toString(16)}`
-
-      // if (chainId !== rinkebyChainId && chainId !== localhostChainId) {
-      //     alert('You are not connected to the Rinkeby Testnet!')
-      //     return
-      // }
-
-      const accounts = await provider.send('eth_requestAccounts', [])
-      store.dispatch({type: ActionType.SET_ADDRESS, payload: accounts[0]});
+      const gameWithSigner: ethers.Contract = new ethers.Contract(
+        address,
+        abi,
+        this.state.connection.provider.getSigner(),
+      );
+      await gameWithSigner.start();
     } catch (error) {
-        console.log('Error connecting to metamask', error)
+      console.log('Error connecting to contract', error);
     }
-  }
+  };
 
-  accountChanged = async () => {
+  private accountChanged = () => {
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts: Array<string>) => {
-        store.dispatch({type: ActionType.SET_ADDRESS, payload: accounts[0]});
+        this.actions?.setUserAddress(accounts[0]);
       });
       window.ethereum.on('chainChanged', (_chainId: string) => {
-        store.dispatch({type: ActionType.SET_NETWORK, payload: _chainId});
+        this.actions?.setChainId(_chainId);
       });
       window.ethereum.on('disconnect', () => {
-        store.dispatch({type: ActionType.SET_ADDRESS, payload: null});
+        this.actions?.setUserAddress(null);
       });
     }
-  }
-
+  };
 }
 
 export default BootScene;

@@ -2,33 +2,44 @@
 
 pragma solidity ^0.8.7;
 
-import "./Blackbox.sol";
+import './BlackBox.sol';
 
 contract Game {
+  BlackBox box;
+  uint256 id;
+  mapping(address => uint256) public addressList;
+  mapping(address => uint256) public userScore;
+  struct Player {
+    uint256 id;
+    uint256 score;
+  }
+  Player[] public players;
+  event GameStarted(bool start);
+  event NewScore(Player[] players);
 
-    BlackBox box;
-    uint id;
-    mapping(address => uint) public addressList;
-    mapping(address => uint256) public leaderboard;
+  constructor(address _box) {
+    box = BlackBox(_box);
+    id = 1;
+  }
 
-    constructor(address _box) {
-        box = BlackBox(_box);
-        id = 1;
-    }
+  function start() public {
+    addressList[msg.sender] = id;
+    box.start(addressList[msg.sender]);
+    id += 1;
+    emit GameStarted(true);
+  }
 
-    function start() public {
-        addressList[msg.sender] = id;
-        box.start(addressList[msg.sender]);
-        id += 1;
-    }
+  function submitScore(uint256 score) public {
+    uint256 _userId = addressList[msg.sender];
+    box.submitScore(_userId, score);
+    userScore[msg.sender] = score;
+    Player memory player = Player(addressList[msg.sender], userScore[msg.sender]);
+    players.push(player);
+    delete addressList[msg.sender];
+    emit NewScore(players);
+  }
 
-    function submitScore(uint256 score) public {
-        uint _userId = addressList[msg.sender];
-        bool success = box.submitScore(_userId, score);
-        if (success) {
-            delete addressList[msg.sender];
-            leaderboard[msg.sender] = score;
-        }
-    }
-
+  function getAll() public view returns (Player[] memory) {
+    return players;
+  }
 }

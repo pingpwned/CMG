@@ -1,11 +1,11 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 import { actionCreators, State } from '../state';
 import { useDispatch, useSelector } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { ethers } from 'ethers';
-import {CHAIN_MAP} from '../web3'
+import { CHAIN_MAP } from '../web3';
 import styled from 'styled-components';
 
 const StyledHeader = styled.header`
@@ -24,29 +24,30 @@ const Wallet = styled.span`
 `;
 
 const Header: React.FC = () => {
-  //const [ userAddress, setUserAddress ] = useState<string | null>(null);
-  //const [ chainId, setChainId ] = useState<string | null>(null);
+  // const [ userAddress, setUserAddress ] = useState<string | null>(null);
+  // const [ chainId, setChainId ] = useState<string | null>(null);
 
-    const dispatch = useDispatch();
-    const state: any = useSelector((state: State) => state.connection);
-    const { setUserAddress, setChainId } = bindActionCreators(actionCreators, dispatch);
-
+  const dispatch = useDispatch();
+  const state: any = useSelector((state: State) => state.connection);
+  const { setUserAddress, setChainId } = bindActionCreators(actionCreators, dispatch);
 
   /* TODO:  - add Redux
    *        - move connectWallet to ../web3
    *        - use Redux instead of state
    */
-  const connectWallet = async () => {
+  const connectWallet = useCallback(async () => {
     try {
-      if (!window.ethereum) console.warn('Metamask not detected')
-      const provider: ethers.providers.Web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+      if (!window.ethereum) console.warn('Metamask not detected');
+      const provider: ethers.providers.Web3Provider = new ethers.providers.Web3Provider(
+        window.ethereum,
+      );
       if (!provider) {
-          console.error('Cannot create provider')
-          return
+        console.error('Cannot create provider');
+        return;
       }
-      const _chainId = await provider.send('eth_chainId', [])
-      setChainId(_chainId)
-      console.log('Connected to chain:' + state.chainId)
+      const chainId = await provider.send('eth_chainId', []);
+      setChainId(chainId);
+      console.log(`Connected to chain:${state.chainId}`);
 
       // const rinkebyChainId = '0x4'
       //
@@ -58,43 +59,46 @@ const Header: React.FC = () => {
       //     return
       // }
 
-      const accounts = await provider.send('eth_requestAccounts', [])
+      const accounts = await provider.send('eth_requestAccounts', []);
       setUserAddress(accounts[0]);
     } catch (error) {
-        console.log('Error connecting to metamask', error)
+      console.log('Error connecting to metamask', error);
     }
-  }
+  }, [setChainId, setUserAddress, state.chainId]);
 
-  const accountChanged = async () => {
+  const accountChanged = useCallback(() => {
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts: Array<string>) => {
         setUserAddress(accounts[0]);
       });
       window.ethereum.on('chainChanged', (chainId: string) => {
-        setChainId(chainId)
+        setChainId(chainId);
       });
       window.ethereum.on('disconnect', () => {
         setUserAddress(null);
       });
     }
-  }
+  }, [setChainId, setUserAddress]);
 
   useEffect(() => {
-    connectWallet()
-    accountChanged()
-  }, [])
-
+    connectWallet();
+    accountChanged();
+  }, [accountChanged, connectWallet]);
 
   return (
     <>
       <StyledHeader>
-      <Logo>CMGame</Logo>
-      <Wallet>{state.userAddress ? `${state.userAddress} on ${CHAIN_MAP.find((x) => x.chainId === state.chainId)?.chainName}` : "Connect wallet"}</Wallet>
+        <Logo>CMGame</Logo>
+        <Wallet>
+          {state.userAddress
+            ? `${state.userAddress} on ${
+                CHAIN_MAP.find(x => x.chainId === state.chainId)?.chainName
+              }`
+            : 'Connect wallet'}
+        </Wallet>
       </StyledHeader>
     </>
-  )
-}
+  );
+};
 
-export {
-  Header,
-}
+export { Header };

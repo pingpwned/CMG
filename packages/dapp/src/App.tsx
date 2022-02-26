@@ -1,116 +1,87 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useEffect } from 'react';
 
-import { useSelector } from 'react-redux';
-import { store, State } from './state';
-import { ActionType } from './state/action-types';
+import { bindActionCreators } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { IonPhaser } from '@ion-phaser/react'
-import { Header } from './components/Header';
-import { gameConfig as game } from './game/gameConfig';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { State, actionCreators } from '@state';
+import Game from '@game/main';
+import { connectWallet } from '@web3/connectWallet';
 
-const Layout = styled.div`
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const Modal = styled.div`
-  z-index: 10000;
-  background-color: #000000d4;;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const ModalBox = styled(motion.div)`
-  background-color: #ffffff;
-  width: 45%;
-  min-height: 20vh;
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0 30px;
-  position: relative;
-`;
-const ModalTitle = styled.h2``;
-const ModalDesc = styled.p``;
-const CloseButton = styled.span`
-  cursor: pointer;
-
-  position: absolute;
-  top: 15px;
-  right: 15px;
-
-  width: 20px;
-  height: 20px;
-
-
-  &:before,
-  &:after {
-    position: absolute;
-    left: 15px;
-    content: ' ';
-    height: 20px;
-    width: 2px;
-    background-color: #929292;
-
-    transition: all .2s ease-in-out;
-  }
-  &:before {
-    transform: rotate(45deg);
-  }
-  &:after {
-    transform: rotate(-45deg);
-  }
-  &:hover {
-    &:before,
-    &:after {
-      background-color: #000;
-    }
-  }
-`;
-
-
+import {
+  Layout,
+  Modal,
+  ModalBox,
+  ModalTitle,
+  ModalDesc,
+  CloseButton,
+  Leaderboard,
+} from '@components';
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+  const { toggleModal } = bindActionCreators(actionCreators, dispatch);
   const state = useSelector((state: State) => state.connection);
-  const gameRef = useRef<HTMLIonPhaserElement>(null);
-  const destroy = () => {
-     if (gameRef.current) {
-       gameRef.current.destroy();
-     }
-  }
 
-  (state.userAddress === '0x0') && destroy()
+  useEffect(() => {
+    connectWallet();
+  }, []);
+
+  // const destroy = () => {
+  //     if (gameRef.current) {
+  //         gameRef.current.destroy();
+  //     }
+  // };
+  // state.userAddress === '0x0' && destroy();
 
   return (
-    <Layout>
-      {state.openProviderModal &&
-        <Modal>
-          <ModalBox  initial={{ y: "-300px", z: "-300px", opacity: 0 }} animate={{ y: 0, z: 0, opacity: 1 }}>
-            <CloseButton onClick={() => store.dispatch({type: ActionType.OPEN_PROVIDER_MODAL})} />
-            <ModalTitle>No provider detected 😱</ModalTitle>
-            <ModalDesc>Seems like you have no Metamask installed. Please, refer to guide how to install Metamask and create a wallet. You also have to add some funds to pay network fee.</ModalDesc>
-          </ModalBox>
-        </Modal>
-      }
-      <div>
-        <h3>Crypto Mario Game! Welcome!</h3>
-        <p>Connect your metamask wallet to start playing</p>
-      </div>
+    <>
+      <Layout>
+        {state.openProviderModal && (
+          <Modal>
+            <ModalBox
+              initial={{ y: '-300px', z: '-300px', opacity: 0 }}
+              animate={{ y: 0, z: 0, opacity: 1 }}
+            >
+              <CloseButton onClick={() => toggleModal()} />
+              <ModalTitle>No provider detected 😱</ModalTitle>
+              <ModalDesc>
+                Seems like you have no Metamask installed. Please, refer to guide how to install
+                Metamask and create a wallet. You also have to add some funds to pay network fee.
+              </ModalDesc>
+            </ModalBox>
+          </Modal>
+        )}
+        <div>
+          <h3>Crypto Mario Game! Welcome!</h3>
+          <p>
+            Connect your metamask wallet to start playing. Game is deployed on{' '}
+            <a href="https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain">
+              BSC Test network
+            </a>
+            .
+          </p>
+        </div>
+      </Layout>
 
-      <IonPhaser ref={gameRef} game={game} initialize={true} />
-
-    </Layout>
+      <Game
+        leaderboard={
+          <Leaderboard>
+            <strong>Top scores</strong>
+            <ul>
+              {state.players?.map((player: any, key: number) => {
+                return (
+                  <li key={key}>
+                    <span>ID {player.id}: </span>
+                    <span>{player.score}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </Leaderboard>
+        }
+      />
+    </>
   );
-}
+};
 
 export default App;

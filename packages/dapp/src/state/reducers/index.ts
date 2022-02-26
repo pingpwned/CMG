@@ -1,7 +1,7 @@
-import { combineReducers } from 'redux';
+import { combineReducers, Reducer } from 'redux';
 import { connectionReducer } from './connectionReducer';
 
-const reducers = combineReducers({
+const reducers: Reducer = combineReducers({
   connection: connectionReducer,
 });
 
