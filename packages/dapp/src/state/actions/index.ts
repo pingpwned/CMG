@@ -50,9 +50,17 @@ export const submitScore = () => (dispatch: Dispatch<Action>) => {
   });
 };
 
-export const setPlayers = (players: Array<{}>) => (dispatch: Dispatch<Action>) => {
+export const setPlayers =
+  (players: Array<{ name: string; score: number }>) => (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.SET_PLAYERS,
+      payload: players,
+    });
+  };
+
+export const setPlayerName = (name: string) => (dispatch: Dispatch<Action>) => {
   dispatch({
-    type: ActionType.SET_PLAYERS,
-    payload: players,
+    type: ActionType.SET_PLAYER_NAME,
+    payload: name,
   });
 };

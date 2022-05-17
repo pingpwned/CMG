@@ -67,16 +67,20 @@ const App: React.FC = () => {
         leaderboard={
           <Leaderboard>
             <strong>Top scores</strong>
-            <ul>
+            <table>
+              <tr>
+                <th>Name</th>
+                <th>Score</th>
+              </tr>
               {state.players?.map((player: any, key: number) => {
                 return (
-                  <li key={key}>
-                    <span>ID {player.id}: </span>
-                    <span>{player.score}</span>
-                  </li>
+                  <tr key={key}>
+                    <td><div>{player.name}: </div></td>
+                    <td>{player.score}</td>
+                  </tr>
                 );
               })}
-            </ul>
+            </table>
           </Leaderboard>
         }
       />

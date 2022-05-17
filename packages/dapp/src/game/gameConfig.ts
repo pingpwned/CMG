@@ -10,6 +10,10 @@ export const gameConfig: Phaser.Types.Core.GameConfig = {
   width: 800,
   height: 600,
 
+  dom: {
+    createContainer: true,
+  },
+
   scale: {
     min: {
       width: 375,

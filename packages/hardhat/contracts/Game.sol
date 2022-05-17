@@ -8,9 +8,10 @@ contract Game {
   BlackBox box;
   uint256 id;
   mapping(address => uint256) public addressList;
-  mapping(address => uint256) public userScore;
+  mapping(uint256 => string) public nameList;
+  mapping(string => uint256) public userScore;
   struct Player {
-    uint256 id;
+    string name;
     uint256 score;
   }
   Player[] public players;
@@ -22,18 +23,20 @@ contract Game {
     id = 1;
   }
 
-  function start() public {
+  function start(string _name) public {
     addressList[msg.sender] = id;
+    nameList[id] = _name;
     box.start(addressList[msg.sender]);
-    id += 1;
+    id++;
     emit GameStarted(true);
   }
 
-  function submitScore(uint256 score) public {
-    uint256 _userId = addressList[msg.sender];
-    box.submitScore(_userId, score);
-    userScore[msg.sender] = score;
-    Player memory player = Player(addressList[msg.sender], userScore[msg.sender]);
+  function submitScore(uint256 _score) public {
+    uint256 userId = addressList[msg.sender];
+    string name = nameList[userId];
+    box.submitScore(userId, score);
+    userScore[name] = score;
+    Player memory player = Player(nameList[userId], userScore[name]);
     players.push(player);
     delete addressList[msg.sender];
     emit NewScore(players);

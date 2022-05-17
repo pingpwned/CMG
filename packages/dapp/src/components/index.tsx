@@ -73,6 +73,16 @@ const GameMountPoint = styled.div`
 const Leaderboard = styled.div`
   position: absolute;
   right: 5px;
+  & table {
+    width: 200px;
+    text-align: left;
+    & tr {
+      & td:first-child > div {
+        max-width: 130px;
+        overflow-x: scroll;
+      }
+    }
+  }
 `;
 
 export { Layout, Modal, ModalBox, ModalTitle, ModalDesc, CloseButton, Leaderboard, GameMountPoint };

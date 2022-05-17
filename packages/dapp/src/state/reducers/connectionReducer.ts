@@ -7,6 +7,7 @@ interface State {
   score: number;
   openProviderModal: boolean;
   submitScore: boolean;
+  name: string;
 }
 
 export const initialState: State = {
@@ -16,6 +17,7 @@ export const initialState: State = {
   score: 0,
   openProviderModal: false,
   submitScore: false,
+  name: '',
 };
 
 export const connectionReducer = (state: State = initialState, action: Action) => {
@@ -37,10 +39,10 @@ export const connectionReducer = (state: State = initialState, action: Action) =
     case ActionType.SUBMIT_SCORE:
       return { ...state, submitScore: !state.submitScore };
     case ActionType.SET_PLAYERS:
-      const leaders: Array<{ id: number; score: number }> = [];
+      const leaders: Array<{ name: string; score: number }> = [];
       action.payload.forEach((player: any) => {
         leaders.push({
-          id: parseInt(player[0]._hex),
+          name: player[0],
           score: parseInt(player[1]._hex),
         });
       });
@@ -53,6 +55,8 @@ export const connectionReducer = (state: State = initialState, action: Action) =
         }
       });
       return { ...state, players: leaders };
+    case ActionType.SET_PLAYER_NAME:
+      return { ...state, name: action.payload };
     default:
       return state;
   }

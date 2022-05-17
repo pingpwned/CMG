@@ -38,6 +38,8 @@ export const connectWallet = async () => {
     const gameWithSigner: ethers.Contract = contract.connect(signer);
     const players = await gameWithSigner.getAll();
 
+    console.log(players);
+
     setPlayers(players);
 
     const filter = {

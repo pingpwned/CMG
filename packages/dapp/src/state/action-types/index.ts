@@ -1,4 +1,4 @@
-import { ethers, providers } from 'ethers';
+import { ethers } from 'ethers';
 
 export enum ActionType {
   SET_ADDRESS = 'SET_ADDRESS',
@@ -10,6 +10,7 @@ export enum ActionType {
   SET_PROVIDER = 'SET_PROVIDER',
   SUBMIT_SCORE = 'SUBMIT_SCORE',
   SET_PLAYERS = 'SET_PLAYERS',
+  SET_PLAYER_NAME = 'SET_PLAYER_NAME',
 }
 interface SetAddress {
   type: ActionType.SET_ADDRESS;
@@ -40,7 +41,11 @@ interface SubmitScore {
 }
 interface SetPlayers {
   type: ActionType.SET_PLAYERS;
-  payload: Array<{ id: number; score: number }>;
+  payload: Array<{ name: string; score: number }>;
+}
+interface SetPlayerName {
+  type: ActionType.SET_PLAYER_NAME;
+  payload: string;
 }
 
 export type Action =
@@ -52,4 +57,5 @@ export type Action =
   | GameStarted
   | SetProvider
   | SubmitScore
-  | SetPlayers;
+  | SetPlayers
+  | SetPlayerName;
