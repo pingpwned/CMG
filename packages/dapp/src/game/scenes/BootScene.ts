@@ -27,6 +27,7 @@ class BootScene extends Phaser.Scene {
   }
   create(): void {
     this.sky = this.add.image(0, 0, 'sky');
+
     this.helloButton = this.add.text(0, 0, this.TEXT_CONNECT_BUTTON, { color: '#333' });
     this.helloButton.setInteractive({ useHandCursor: true });
     this.helloButton.on('pointerdown', () => {

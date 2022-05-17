@@ -14,6 +14,8 @@ class GameScene extends Phaser.Scene {
   private actions?: typeof actionCreators;
   private bombs?: Phaser.GameObjects.Group;
   private gameOver: boolean;
+  private music?: Phaser.Sound.BaseSound;
+  private MarioDieSound?: Phaser.Sound.BaseSound;
 
   private state: State = store.getState();
 
@@ -28,6 +30,8 @@ class GameScene extends Phaser.Scene {
   public preload() {
     this.state = store.getState();
     this.actions = bindActionCreators(actionCreators, store.dispatch);
+    this.load.audio('cute_monster', 'static/cute_monster.mp3');
+    this.load.audio('Mario_die', 'static/Mario_1-die.mp3');
     this.load.image('sky', 'static/sky.png');
     this.load.image('ground', 'static/platform_mario.png');
     this.load.image('star', 'static/coin.png');
@@ -40,6 +44,10 @@ class GameScene extends Phaser.Scene {
 
   public create() {
     this.add.image(400, 300, 'sky');
+
+    this.music = this.sound.add('cute_monster');
+    this.MarioDieSound = this.sound.add('Mario_die');
+    this.music.play();
 
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
@@ -166,10 +174,15 @@ class GameScene extends Phaser.Scene {
 
   public hitBomb(player: any) {
     this.physics.pause();
+    this.music?.pause();
+    this.MarioDieSound?.play();
     player.setTint(0xff0000);
     player.anims.play('turn');
-    this.gameOver = true;
-    this.actions?.setGameOver();
+    this.MarioDieSound?.once('complete', (music: Phaser.Sound.BaseSound) => {
+      music.stop();
+      this.gameOver = true;
+      this.actions?.setGameOver();
+    });
   }
 }
 
