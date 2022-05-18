@@ -68,18 +68,22 @@ const App: React.FC = () => {
           <Leaderboard>
             <strong>Top scores</strong>
             <table>
-              <tr>
-                <th>Name</th>
-                <th>Score</th>
-              </tr>
-              {state.players?.map((player: any, key: number) => {
-                return (
-                  <tr key={key}>
-                    <td><div>{player.name}: </div></td>
-                    <td>{player.score}</td>
-                  </tr>
-                );
-              })}
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {state.players?.map((player: any, key: number) => {
+                  return (
+                    <tr key={key}>
+                      <td><div>{player.name}: </div></td>
+                      <td>{player.score}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </Leaderboard>
         }
