@@ -23,7 +23,7 @@ contract Game {
     id = 1;
   }
 
-  function start(string _name) public {
+  function start(string memory _name) public {
     addressList[msg.sender] = id;
     nameList[id] = _name;
     box.start(addressList[msg.sender]);
@@ -33,9 +33,9 @@ contract Game {
 
   function submitScore(uint256 _score) public {
     uint256 userId = addressList[msg.sender];
-    string name = nameList[userId];
-    box.submitScore(userId, score);
-    userScore[name] = score;
+    string memory name = nameList[userId];
+    box.submitScore(userId, _score);
+    userScore[name] = _score;
     Player memory player = Player(nameList[userId], userScore[name]);
     players.push(player);
     delete addressList[msg.sender];

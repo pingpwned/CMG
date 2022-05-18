@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+<<<<<<< HEAD
   PayableOverrides,
   PopulatedTransaction,
   Signer,
@@ -17,6 +18,24 @@ import type {
 import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi';
 import type { Listener, Provider } from '@ethersproject/providers';
 import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from '../common';
+=======
+  PopulatedTransaction,
+  Signer,
+  utils,
+} from "ethers";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
+import type { Listener, Provider } from "@ethersproject/providers";
+import type {
+  TypedEventFilter,
+  TypedEvent,
+  TypedListener,
+  OnEvent,
+} from "../common";
+>>>>>>> 6d267f1 (add hardhat tests)
 
 export declare namespace Game {
   export type PlayerStruct = { name: string; score: BigNumberish };
@@ -29,6 +48,7 @@ export declare namespace Game {
 
 export interface GameInterface extends utils.Interface {
   functions: {
+<<<<<<< HEAD
     'addressList(address)': FunctionFragment;
     'getAll()': FunctionFragment;
     'initialize(address)': FunctionFragment;
@@ -43,10 +63,20 @@ export interface GameInterface extends utils.Interface {
     'upgradeTo(address)': FunctionFragment;
     'upgradeToAndCall(address,bytes)': FunctionFragment;
     'userScore(string)': FunctionFragment;
+=======
+    "addressList(address)": FunctionFragment;
+    "getAll()": FunctionFragment;
+    "nameList(uint256)": FunctionFragment;
+    "players(uint256)": FunctionFragment;
+    "start(string)": FunctionFragment;
+    "submitScore(uint256)": FunctionFragment;
+    "userScore(string)": FunctionFragment;
+>>>>>>> 6d267f1 (add hardhat tests)
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+<<<<<<< HEAD
       | 'addressList'
       | 'getAll'
       | 'initialize'
@@ -126,6 +156,56 @@ export interface BeaconUpgradedEventObject {
 export type BeaconUpgradedEvent = TypedEvent<[string], BeaconUpgradedEventObject>;
 
 export type BeaconUpgradedEventFilter = TypedEventFilter<BeaconUpgradedEvent>;
+=======
+      | "addressList"
+      | "getAll"
+      | "nameList"
+      | "players"
+      | "start"
+      | "submitScore"
+      | "userScore"
+  ): FunctionFragment;
+
+  encodeFunctionData(functionFragment: "addressList", values: [string]): string;
+  encodeFunctionData(functionFragment: "getAll", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "nameList",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "players",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "start", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "submitScore",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "userScore", values: [string]): string;
+
+  decodeFunctionResult(
+    functionFragment: "addressList",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getAll", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "nameList", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "players", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "start", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "submitScore",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "userScore", data: BytesLike): Result;
+
+  events: {
+    "GameStarted(bool)": EventFragment;
+    "NewScore(tuple[])": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "GameStarted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NewScore"): EventFragment;
+}
+>>>>>>> 6d267f1 (add hardhat tests)
 
 export interface GameStartedEventObject {
   start: boolean;
@@ -134,6 +214,7 @@ export type GameStartedEvent = TypedEvent<[boolean], GameStartedEventObject>;
 
 export type GameStartedEventFilter = TypedEventFilter<GameStartedEvent>;
 
+<<<<<<< HEAD
 export interface InitializedEventObject {
   version: number;
 }
@@ -165,6 +246,17 @@ export interface UpgradedEventObject {
 export type UpgradedEvent = TypedEvent<[string], UpgradedEventObject>;
 
 export type UpgradedEventFilter = TypedEventFilter<UpgradedEvent>;
+=======
+export interface NewScoreEventObject {
+  players: Game.PlayerStructOutput[];
+}
+export type NewScoreEvent = TypedEvent<
+  [Game.PlayerStructOutput[]],
+  NewScoreEventObject
+>;
+
+export type NewScoreEventFilter = TypedEventFilter<NewScoreEvent>;
+>>>>>>> 6d267f1 (add hardhat tests)
 
 export interface Game extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -176,6 +268,7 @@ export interface Game extends BaseContract {
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
+<<<<<<< HEAD
     toBlock?: string | number | undefined,
   ): Promise<Array<TEvent>>;
 
@@ -184,6 +277,18 @@ export interface Game extends BaseContract {
   ): Array<TypedListener<TEvent>>;
   listeners(eventName?: string): Array<Listener>;
   removeAllListeners<TEvent extends TypedEvent>(eventFilter: TypedEventFilter<TEvent>): this;
+=======
+    toBlock?: string | number | undefined
+  ): Promise<Array<TEvent>>;
+
+  listeners<TEvent extends TypedEvent>(
+    eventFilter?: TypedEventFilter<TEvent>
+  ): Array<TypedListener<TEvent>>;
+  listeners(eventName?: string): Array<Listener>;
+  removeAllListeners<TEvent extends TypedEvent>(
+    eventFilter: TypedEventFilter<TEvent>
+  ): this;
+>>>>>>> 6d267f1 (add hardhat tests)
   removeAllListeners(eventName?: string): this;
   off: OnEvent<this>;
   on: OnEvent<this>;
@@ -195,6 +300,7 @@ export interface Game extends BaseContract {
 
     getAll(overrides?: CallOverrides): Promise<[Game.PlayerStructOutput[]]>;
 
+<<<<<<< HEAD
     initialize(
       _box: string,
       overrides?: Overrides & { from?: string | Promise<string> },
@@ -218,10 +324,23 @@ export interface Game extends BaseContract {
     start(
       _name: string,
       overrides?: Overrides & { from?: string | Promise<string> },
+=======
+    nameList(arg0: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
+
+    players(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { name: string; score: BigNumber }>;
+
+    start(
+      _name: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+>>>>>>> 6d267f1 (add hardhat tests)
     ): Promise<ContractTransaction>;
 
     submitScore(
       _score: BigNumberish,
+<<<<<<< HEAD
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
@@ -239,6 +358,9 @@ export interface Game extends BaseContract {
       newImplementation: string,
       data: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> },
+=======
+      overrides?: Overrides & { from?: string | Promise<string> }
+>>>>>>> 6d267f1 (add hardhat tests)
     ): Promise<ContractTransaction>;
 
     userScore(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -248,6 +370,7 @@ export interface Game extends BaseContract {
 
   getAll(overrides?: CallOverrides): Promise<Game.PlayerStructOutput[]>;
 
+<<<<<<< HEAD
   initialize(
     _box: string,
     overrides?: Overrides & { from?: string | Promise<string> },
@@ -271,10 +394,23 @@ export interface Game extends BaseContract {
   start(
     _name: string,
     overrides?: Overrides & { from?: string | Promise<string> },
+=======
+  nameList(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  players(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber] & { name: string; score: BigNumber }>;
+
+  start(
+    _name: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+>>>>>>> 6d267f1 (add hardhat tests)
   ): Promise<ContractTransaction>;
 
   submitScore(
     _score: BigNumberish,
+<<<<<<< HEAD
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
@@ -292,6 +428,9 @@ export interface Game extends BaseContract {
     newImplementation: string,
     data: BytesLike,
     overrides?: PayableOverrides & { from?: string | Promise<string> },
+=======
+    overrides?: Overrides & { from?: string | Promise<string> }
+>>>>>>> 6d267f1 (add hardhat tests)
   ): Promise<ContractTransaction>;
 
   userScore(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
@@ -301,6 +440,7 @@ export interface Game extends BaseContract {
 
     getAll(overrides?: CallOverrides): Promise<Game.PlayerStructOutput[]>;
 
+<<<<<<< HEAD
     initialize(_box: string, overrides?: CallOverrides): Promise<void>;
 
     nameList(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
@@ -316,10 +456,20 @@ export interface Game extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
+=======
+    nameList(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    players(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & { name: string; score: BigNumber }>;
+
+>>>>>>> 6d267f1 (add hardhat tests)
     start(_name: string, overrides?: CallOverrides): Promise<void>;
 
     submitScore(_score: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
+<<<<<<< HEAD
     transferOwnership(newOwner: string, overrides?: CallOverrides): Promise<void>;
 
     upgradeTo(newImplementation: string, overrides?: CallOverrides): Promise<void>;
@@ -330,10 +480,13 @@ export interface Game extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>;
 
+=======
+>>>>>>> 6d267f1 (add hardhat tests)
     userScore(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   filters: {
+<<<<<<< HEAD
     'AdminChanged(address,address)'(previousAdmin?: null, newAdmin?: null): AdminChangedEventFilter;
     AdminChanged(previousAdmin?: null, newAdmin?: null): AdminChangedEventFilter;
 
@@ -360,6 +513,13 @@ export interface Game extends BaseContract {
 
     'Upgraded(address)'(implementation?: string | null): UpgradedEventFilter;
     Upgraded(implementation?: string | null): UpgradedEventFilter;
+=======
+    "GameStarted(bool)"(start?: null): GameStartedEventFilter;
+    GameStarted(start?: null): GameStartedEventFilter;
+
+    "NewScore(tuple[])"(players?: null): NewScoreEventFilter;
+    NewScore(players?: null): NewScoreEventFilter;
+>>>>>>> 6d267f1 (add hardhat tests)
   };
 
   estimateGas: {
@@ -367,6 +527,7 @@ export interface Game extends BaseContract {
 
     getAll(overrides?: CallOverrides): Promise<BigNumber>;
 
+<<<<<<< HEAD
     initialize(
       _box: string,
       overrides?: Overrides & { from?: string | Promise<string> },
@@ -387,10 +548,20 @@ export interface Game extends BaseContract {
     start(
       _name: string,
       overrides?: Overrides & { from?: string | Promise<string> },
+=======
+    nameList(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    players(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    start(
+      _name: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+>>>>>>> 6d267f1 (add hardhat tests)
     ): Promise<BigNumber>;
 
     submitScore(
       _score: BigNumberish,
+<<<<<<< HEAD
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
@@ -408,12 +579,16 @@ export interface Game extends BaseContract {
       newImplementation: string,
       data: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> },
+=======
+      overrides?: Overrides & { from?: string | Promise<string> }
+>>>>>>> 6d267f1 (add hardhat tests)
     ): Promise<BigNumber>;
 
     userScore(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
+<<<<<<< HEAD
     addressList(arg0: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getAll(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -433,15 +608,37 @@ export interface Game extends BaseContract {
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> },
+=======
+    addressList(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getAll(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    nameList(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    players(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+>>>>>>> 6d267f1 (add hardhat tests)
     ): Promise<PopulatedTransaction>;
 
     start(
       _name: string,
+<<<<<<< HEAD
       overrides?: Overrides & { from?: string | Promise<string> },
+=======
+      overrides?: Overrides & { from?: string | Promise<string> }
+>>>>>>> 6d267f1 (add hardhat tests)
     ): Promise<PopulatedTransaction>;
 
     submitScore(
       _score: BigNumberish,
+<<<<<<< HEAD
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
@@ -462,5 +659,14 @@ export interface Game extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     userScore(arg0: string, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+=======
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    userScore(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+>>>>>>> 6d267f1 (add hardhat tests)
   };
 }
