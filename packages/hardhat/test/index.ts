@@ -4,7 +4,7 @@ import { Contract } from 'ethers';
 import { ethers, upgrades } from 'hardhat';
 import { BlackBox__factory, gameSol } from '../typechain-types/factories/contracts';
 
-describe('UUPS proxy test', () => {
+describe('UUPS proxy', () => {
   let Game: gameSol.Game__factory;
   let BlackBox: BlackBox__factory;
 
@@ -16,7 +16,7 @@ describe('UUPS proxy test', () => {
     GameV2 = (await ethers.getContractFactory('GameV2')) as gameSol.GameV2__factory;
   });
 
-  it('deploys contracts & upgrades Game to GameV2', async () => {
+  it('Deploys contracts & upgrades Game to GameV2', async () => {
     const box = await upgrades.deployProxy(BlackBox, undefined, { kind: 'uups' });
     await box.deployed();
     const game = await upgrades.deployProxy(Game, [box.address], { kind: 'uups' });
@@ -26,11 +26,11 @@ describe('UUPS proxy test', () => {
 
     const gamev2 = await upgrades.upgradeProxy(game, GameV2);
 
-    console.log(`   Upgraded Game: `, gamev2.address);
+    console.log(`   GameV2: `, gamev2.address);
   });
 });
 
-describe('Game', () => {
+describe('GameV2', () => {
   let Game: gameSol.Game__factory;
   let BlackBox: BlackBox__factory;
   let box: Contract;
