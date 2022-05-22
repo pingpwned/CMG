@@ -8,8 +8,10 @@
 
 2D Phaser game powered with Web3. Enjoy game and write username and score to leaderboard on blockchain.
 
-##### Tech stack
+#### Packages
 
-- Lerna typescript monorepo with yarn workspaces. Containing two packages:
-  - React app with Phaser.js game engine and ethers.js web3 lib. Bundled with Webpack.
-  - Hardhat typescript with typechain-types.
+| package                                               | description                                           |
+| ----------------------------------------------------- | ----------------------------------------------------- |
+| [@cryptomariogame/dapp](./packages/dapp)              | React app with Phaser.js game engine & ethers.js      |
+| [@cryptomariogame/hardhat](./packages/hardhat)        | Hardhat typescript with typechain-types               |
+| [@cryptomariogame/web-build](./packages/web-build)    | Webpack configuration for front-end                   |
