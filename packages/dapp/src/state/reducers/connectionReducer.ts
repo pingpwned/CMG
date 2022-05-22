@@ -20,7 +20,7 @@ export const initialState: State = {
   name: '',
 };
 
-export const connectionReducer = (state: State = initialState, action: Action) => {
+export const connectionReducer = (action: Action, state: State = initialState) => {
   switch (action.type) {
     case ActionType.SET_ADDRESS:
       return { ...state, userAddress: action.payload };
@@ -38,23 +38,20 @@ export const connectionReducer = (state: State = initialState, action: Action) =
       return { ...state, provider: action.payload };
     case ActionType.SUBMIT_SCORE:
       return { ...state, submitScore: !state.submitScore };
-    case ActionType.SET_PLAYERS:
+    case ActionType.SET_PLAYERS: {
       const leaders: Array<{ name: string; score: number }> = [];
       action.payload.forEach((player: any) => {
         leaders.push({
           name: player[0],
-          score: parseInt(player[1]._hex),
+          /* eslint no-underscore-dangle: ["error", { "allow": ["_hex"] }] */
+          score: parseInt(player[1]._hex, 10),
         });
       });
 
-      leaders.sort((a, b) => {
-        if (a.score > b.score) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
+      leaders.sort((a, b) => a.score > b.score ? -1 : 1);
+
       return { ...state, players: leaders };
+    }
     case ActionType.SET_PLAYER_NAME:
       return { ...state, name: action.payload };
     default:

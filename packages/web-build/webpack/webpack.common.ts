@@ -28,14 +28,14 @@ const config: webpack.Configuration = {
               plugins: [
                 '@babel/plugin-transform-runtime',
                 [
-                    'babel-plugin-styled-components',
-                    {
-                        displayName: true,
-                        preprocess: true,
-                    },
+                  'babel-plugin-styled-components',
+                  {
+                    displayName: true,
+                    preprocess: true,
+                  },
                 ],
               ],
-          },
+            },
           },
         ],
       },

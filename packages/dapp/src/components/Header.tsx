@@ -23,7 +23,7 @@ const Wallet = styled.span`
   color: #e1e1e1;
 `;
 
-const Header: React.FC = () => {
+function Header() {
   // const [ userAddress, setUserAddress ] = useState<string | null>(null);
   // const [ chainId, setChainId ] = useState<string | null>(null);
 
@@ -86,18 +86,16 @@ const Header: React.FC = () => {
   }, [accountChanged, connectWallet]);
 
   return (
-    <>
-      <StyledHeader>
-        <Logo>CMGame</Logo>
-        <Wallet>
-          {state.userAddress
+    <StyledHeader>
+      <Logo>CMGame</Logo>
+      <Wallet>
+        {state.userAddress
             ? `${state.userAddress} on ${
                 CHAIN_MAP.find(x => x.chainId === state.chainId)?.chainName
               }`
             : 'Connect wallet'}
-        </Wallet>
-      </StyledHeader>
-    </>
+      </Wallet>
+    </StyledHeader>
   );
 };
 

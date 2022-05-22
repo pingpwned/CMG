@@ -6,27 +6,27 @@
 import { ethers, upgrades } from 'hardhat';
 
 async function main() {
-    // Hardhat always runs the compile task when running scripts with its command
-    // line interface.
-    //
-    // If this script is run directly using `node` you may want to call compile
-    // manually to make sure everything is compiled
-    // await hre.run('compile');
+  // Hardhat always runs the compile task when running scripts with its command
+  // line interface.
+  //
+  // If this script is run directly using `node` you may want to call compile
+  // manually to make sure everything is compiled
+  // await hre.run('compile');
 
-    // We get the contract to deploy
-    const Game = await ethers.getContractFactory('Game');
-    const BlackBox = await ethers.getContractFactory('BlackBox');
-    const box = await upgrades.deployProxy(BlackBox);
-    await box.deployed();
-    const game = await upgrades.deployProxy(Game, [box.address]);
-    await game.deployed();
+  // We get the contract to deploy
+  const Game = await ethers.getContractFactory('Game');
+  const BlackBox = await ethers.getContractFactory('BlackBox');
+  const box = await upgrades.deployProxy(BlackBox);
+  await box.deployed();
+  const game = await upgrades.deployProxy(Game, [box.address]);
+  await game.deployed();
 
-    console.log('BlackBox: ', box.address, ', Game: ', game.address);
+  console.log('BlackBox: ', box.address, ', Game: ', game.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main().catch(error => {
-    console.error(error);
-    process.exitCode = 1;
+  console.error(error);
+  process.exitCode = 1;
 });

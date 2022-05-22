@@ -1,29 +1,29 @@
 {
-    "name": "root",
-    "private": true,
-    "workspaces": [
-        "packages/*"
-    ],
-    "scripts": {
-        "lint": "eslint --cache --ignore-path .gitignore --ext .js,.ts,.tsx ./",
-        "format": "yarn prettier --write --ignore-path  .gitignore \"**/*.{js,ts,tsx,mdx,md,html,json}\"",
-        "format:check": "yarn prettier --check --ignore-path  .gitignore \"**/*.{js,ts,tsx,mdx,md,html,json}\"",
-        "dev": "yarn workspace @cryptomariogame/web-build dev",
-        "build": "yarn workspace @cryptomariogame/web-build build"
-    },
-    "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "^5.12.1",
-        "@typescript-eslint/parser": "^5.12.1",
-        "eslint": "^8.7.0",
-        "eslint-config-airbnb": "^19.0.4",
-        "eslint-config-prettier": "^8.3.0",
-        "eslint-import-resolver-typescript": "^2.5.0",
-        "eslint-plugin-cypress": "^2.12.1",
-        "eslint-plugin-import": "^2.25.4",
-        "eslint-plugin-jsx-a11y": "^6.5.1",
-        "eslint-plugin-prettier": "^4.0.0",
-        "eslint-plugin-react": "^7.28.0",
-        "eslint-plugin-react-hooks": "^4.3.0",
-        "lerna": "^4.0.0"
-    }
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "eslint --cache --ignore-path .gitignore --ext .js,.ts,.tsx ./",
+    "format": "yarn prettier --write --ignore-path  .gitignore \"**/*.{js,ts,tsx,mdx,md,html,json}\"",
+    "format:check": "yarn prettier --check --ignore-path  .gitignore \"**/*.{js,ts,tsx,mdx,md,html,json}\"",
+    "dev": "yarn workspace @cryptomariogame/web-build dev",
+    "build": "yarn workspace @cryptomariogame/web-build build"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.1",
+    "@typescript-eslint/parser": "^5.12.1",
+    "eslint": "^8.7.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "lerna": "^4.0.0"
+  }
 }

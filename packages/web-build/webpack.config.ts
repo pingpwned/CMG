@@ -17,4 +17,4 @@ switch (NODE_ENV) {
   // no default
 }
 
-module.exports = merge(configs);
+export default merge(configs);

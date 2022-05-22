@@ -8,7 +8,7 @@ import { connectWallet } from '@web3/connectWallet';
 class BootScene extends Phaser.Scene {
   private state?: State;
   private actions?: typeof actionCreators;
-  private readyToStart: boolean = false;
+  private readyToStart = false;
   private connectWalletButton?: Phaser.GameObjects.Text;
   private playButton?: Phaser.GameObjects.Text;
   private textInput?: Phaser.GameObjects.DOMElement;

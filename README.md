@@ -11,5 +11,5 @@
 ##### Tech stack
 
 - Lerna typescript monorepo with yarn workspaces. Containing two packages:
-  -  React app with Phaser.js game engine and ethers.js web3 lib. Bundled with Webpack.
-  -  Hardhat typescript with typechain-types.
+  - React app with Phaser.js game engine and ethers.js web3 lib. Bundled with Webpack.
+  - Hardhat typescript with typechain-types.

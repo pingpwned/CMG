@@ -17,7 +17,7 @@ import {
   Leaderboard,
 } from '@components';
 
-const App: React.FC = () => {
+function App() {
   const dispatch = useDispatch();
   const { toggleModal } = bindActionCreators(actionCreators, dispatch);
   const state = useSelector((state: State) => state.connection);
@@ -75,10 +75,13 @@ const App: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {state.players?.map((player: any, key: number) => {
+                {state.players?.map((player: any) => {
+                  const { id } = player;
                   return (
-                    <tr key={key}>
-                      <td><div>{player.name}: </div></td>
+                    <tr key={id}>
+                      <td>
+                        <div>{player.name}: </div>
+                      </td>
                       <td>{player.score}</td>
                     </tr>
                   );
@@ -90,6 +93,6 @@ const App: React.FC = () => {
       />
     </>
   );
-};
+}
 
 export default App;

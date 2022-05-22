@@ -61,7 +61,7 @@ export const connectWallet = async () => {
       setPlayers(players);
     });
 
-    //await gameWithSigner.start();
+    // await gameWithSigner.start();
   } catch (error) {
     console.log('Error connecting to metamask', error);
   }
