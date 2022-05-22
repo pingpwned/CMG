@@ -2,16 +2,19 @@
 
 pragma solidity ^0.8.7;
 
-import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
+import '@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol';
+import '@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol';
 
-contract BlackBox is Ownable {
+contract BlackBox is Initializable, OwnableUpgradeable, UUPSUpgradeable {
     uint256 public difficulty;
     mapping(uint256 => uint256) public usersList;
     mapping(uint256 => uint256) public usersScore;
 
     bool public success;
 
-    constructor() Ownable() {
+    function initialize() public initializer { 
+        __Ownable_init();
         difficulty = 20;
         success = false;
     }
@@ -56,4 +59,6 @@ contract BlackBox is Ownable {
     function resetUserStart(uint256 _id) external {
         delete usersList[_id];
     }
+
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 }

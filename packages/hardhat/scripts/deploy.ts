@@ -3,7 +3,7 @@
 //
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
-import { ethers } from 'hardhat';
+import { ethers, upgrades } from 'hardhat';
 
 async function main() {
     // Hardhat always runs the compile task when running scripts with its command
@@ -16,9 +16,9 @@ async function main() {
     // We get the contract to deploy
     const Game = await ethers.getContractFactory('Game');
     const BlackBox = await ethers.getContractFactory('BlackBox');
-    const box = await BlackBox.deploy();
+    const box = await upgrades.deployProxy(BlackBox);
     await box.deployed();
-    const game = await Game.deploy(box.address);
+    const game = await upgrades.deployProxy(Game, [box.address]);
     await game.deployed();
 
     console.log('BlackBox: ', box.address, ', Game: ', game.address);

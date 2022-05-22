@@ -2,9 +2,13 @@
 
 pragma solidity ^0.8.7;
 
+import '@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol';
+import '@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol';
+import '@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol';
+
 import './BlackBox.sol';
 
-contract Game {
+contract Game is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   BlackBox box;
   uint256 id;
   mapping(address => uint256) public addressList;
@@ -16,9 +20,10 @@ contract Game {
   }
   Player[] public players;
   event GameStarted(bool start);
-  event NewScore(Player[] players);
+  //event NewScore(Player[] players);
 
-  constructor(address _box) {
+  function initialize(address _box) public initializer { 
+    __Ownable_init();
     box = BlackBox(_box);
     id = 1;
   }
@@ -31,7 +36,28 @@ contract Game {
     emit GameStarted(true);
   }
 
-  function submitScore(uint256 _score) public {
+  function submitScore(uint256 _score) public virtual {
+    uint256 userId = addressList[msg.sender];
+    string memory name = nameList[userId];
+    box.submitScore(userId, _score);
+    userScore[name] = _score;
+    Player memory player = Player(nameList[userId], userScore[name]);
+    players.push(player);
+    delete addressList[msg.sender];
+    //emit NewScore(players);
+  }
+
+  function getAll() public view returns (Player[] memory) {
+    return players;
+  }
+
+  function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+}
+
+contract GameV2 is Game {
+  event NewScore(Player[] players);
+
+  function submitScore(uint256 _score) public override {
     uint256 userId = addressList[msg.sender];
     string memory name = nameList[userId];
     box.submitScore(userId, _score);
@@ -40,9 +66,5 @@ contract Game {
     players.push(player);
     delete addressList[msg.sender];
     emit NewScore(players);
-  }
-
-  function getAll() public view returns (Player[] memory) {
-    return players;
   }
 }
