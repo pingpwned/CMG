@@ -1,7 +1,7 @@
-const { merge } = require('webpack-merge');
-const config = require('./webpack/webpack.common');
-const devConfig = require('./webpack/webpack.dev');
-const prodConfig = require('./webpack/webpack.prod');
+import { merge } from 'webpack-merge';
+import config from './webpack/webpack.common';
+import devConfig from './webpack/webpack.dev';
+import prodConfig from './webpack/webpack.prod';
 
 const configs = [config];
 

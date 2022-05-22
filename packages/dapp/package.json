@@ -1,11 +1,11 @@
 {
-  "name": "@dapp/react",
+  "name": "@cryptomariogame/react",
   "version": "1.0.0",
   "main": "webpack.config.ts",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=dev webpack serve --config webpack.config.js",
-    "build": "NODE_ENV=prod webpack --config webpack.config.js"
+    "dev": "yarn workspace @cryptomariogame/web-build dev",
+    "build": "yarn workspace @cryptomariogame/web-build build"
   },
   "dependencies": {
     "ethers": "^5.5.4",
